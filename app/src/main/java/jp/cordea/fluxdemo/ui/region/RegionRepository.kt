@@ -1,6 +1,7 @@
 package jp.cordea.fluxdemo.ui.region
 
 import io.reactivex.Maybe
+import io.reactivex.schedulers.Schedulers
 import jp.cordea.fluxdemo.api.response.Region
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,5 +20,5 @@ class RegionRepository @Inject constructor(
                     dataSource.fetchRegion()
                         .doOnSuccess { localDataSource.cacheRegion(it) }
                 )
-        }
+        }.subscribeOn(Schedulers.io())
 }
