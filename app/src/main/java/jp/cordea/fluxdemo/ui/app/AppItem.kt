@@ -5,9 +5,12 @@ import jp.cordea.fluxdemo.R
 import jp.cordea.fluxdemo.databinding.ListItemAppBinding
 import javax.inject.Inject
 
-class AppItem @Inject constructor(
+class AppItem private constructor(
+    private val viewModel: AppItemViewModel
 ) : BindableItem<ListItemAppBinding>() {
-    lateinit var viewModel: AppItemViewModel
+    class Factory @Inject constructor() {
+        fun create(viewModel: AppItemViewModel) = AppItem(viewModel)
+    }
 
     override fun getLayout(): Int = R.layout.list_item_app
 

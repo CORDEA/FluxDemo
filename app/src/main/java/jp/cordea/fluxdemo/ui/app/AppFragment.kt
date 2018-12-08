@@ -26,6 +26,9 @@ class AppFragment : Fragment() {
     }
 
     @Inject
+    lateinit var itemFactory: AppItem.Factory
+
+    @Inject
     lateinit var store: AppStore
 
     @Inject
@@ -60,7 +63,7 @@ class AppFragment : Fragment() {
 
         store.onReady()
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy { }
+            .subscribeBy { adapter.addAll(it.map { itemFactory.create(AppItemViewModel.from(it)) }) }
             .addTo(compositeDisposable)
         store.onError()
             .observeOn(AndroidSchedulers.mainThread())
