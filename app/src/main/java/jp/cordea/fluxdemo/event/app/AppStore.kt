@@ -23,6 +23,7 @@ class AppStore @Inject constructor(
                     .map<AppResult> { AppResult.Success(it) }
                     .switchIfEmpty(Single.just(AppResult.Failure))
             }
+            .share()
 
     fun onReady() = fetch.ofType<AppResult.Success>().map { it.apps }
     fun onError() = fetch.ofType<AppResult.Failure>().map { Unit }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.jakewharton.rxbinding3.swiperefreshlayout.refreshes
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import dagger.android.support.AndroidSupportInjection
@@ -30,6 +31,8 @@ class AppFragment : Fragment() {
     @Inject
     lateinit var creator: AppActionCreator
 
+    private lateinit var binding: FragmentAppBinding
+
     private val compositeDisposable = CompositeDisposable()
     private val adapter by lazy { GroupAdapter<ViewHolder>() }
 
@@ -43,13 +46,18 @@ class AppFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentAppBinding.inflate(inflater, container, false)
+        binding = FragmentAppBinding.inflate(inflater, container, false)
         binding.recyclerView.adapter = adapter
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.swipeRefresh
+            .refreshes()
+            .subscribeBy { creator.refresh() }
+            .addTo(compositeDisposable)
+
         store.onReady()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy { }
