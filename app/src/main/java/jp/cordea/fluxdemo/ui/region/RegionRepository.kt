@@ -21,4 +21,6 @@ class RegionRepository @Inject constructor(
                         .doOnSuccess { localDataSource.cacheRegion(it) }
                 )
         }.subscribeOn(Schedulers.io())
+
+    fun getRegion(id: Int) = localDataSource.getRegion(id)
 }
