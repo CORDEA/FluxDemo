@@ -25,10 +25,16 @@ class RegionFragment : Fragment() {
     }
 
     @Inject
+    lateinit var itemFactory: RegionItem.Factory
+
+    @Inject
     lateinit var store: RegionStore
 
     @Inject
     lateinit var creator: RegionActionCreator
+
+    @Inject
+    lateinit var navigator: RegionNavigator
 
     private val compositeDisposable = CompositeDisposable()
     private val adapter by lazy { GroupAdapter<ViewHolder>() }
@@ -53,12 +59,16 @@ class RegionFragment : Fragment() {
         store.onReady()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy {
-                adapter.addAll(it.map { RegionItem(RegionItemViewModel.from(it)) })
+                adapter.addAll(it.map { itemFactory.create(RegionItemViewModel.from(it)) })
             }
             .addTo(compositeDisposable)
         store.onError()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy { }
+            .addTo(compositeDisposable)
+        store.onClickedItem()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { navigator.navigateToDetail(it)}
             .addTo(compositeDisposable)
 
         creator.init()

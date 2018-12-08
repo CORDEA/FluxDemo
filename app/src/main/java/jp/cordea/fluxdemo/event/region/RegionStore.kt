@@ -11,7 +11,7 @@ import javax.inject.Inject
 @FragmentScope
 class RegionStore @Inject constructor(
     private val repository: RegionRepository,
-    source: BaseSource<RegionAction>
+    private val source: BaseSource<RegionAction>
 ) {
     private val init = source.reader.ofType<RegionAction.Init>().map { false }
     private val refresh = source.reader.ofType<RegionAction.Refresh>().map { true }
@@ -26,4 +26,6 @@ class RegionStore @Inject constructor(
 
     fun onReady() = fetch.ofType<RegionResult.Success>().map { it.regions }
     fun onError() = fetch.ofType<RegionResult.Failure>().map { Unit }
+    fun onClickedItem() = source.reader.ofType<RegionAction.ClickedItem>()
+        .map { repository.getRegion(it.id) }
 }
