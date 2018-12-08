@@ -7,6 +7,10 @@ import jp.cordea.fluxdemo.di.FragmentScope
 @Module
 interface AppFragmentModule {
     @FragmentScope
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(
+        modules = [
+            AppFragmentBindsModule::class
+        ]
+    )
     fun contributeAppFragment(): AppFragment
 }
