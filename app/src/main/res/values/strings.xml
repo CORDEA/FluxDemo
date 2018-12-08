@@ -15,6 +15,6 @@
     <string name="text_enable">Enable</string>
     <string name="text_disable">Disable</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="nav_region">Regions</string>
+    <string name="nav_app">Applications</string>
 </resources>

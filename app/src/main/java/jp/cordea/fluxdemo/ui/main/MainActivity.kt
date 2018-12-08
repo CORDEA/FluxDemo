@@ -75,22 +75,10 @@ class MainActivity : AppCompatActivity(),
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val transaction = supportFragmentManager.beginTransaction()
         when (item.itemId) {
-            R.id.nav_camera ->
+            R.id.nav_region ->
                 transaction.replace(R.id.container, RegionFragment.newInstance())
-            R.id.nav_gallery ->
+            R.id.nav_app ->
                 transaction.replace(R.id.container, AppFragment.newInstance())
-            R.id.nav_slideshow -> {
-
-            }
-            R.id.nav_manage -> {
-
-            }
-            R.id.nav_share -> {
-
-            }
-            R.id.nav_send -> {
-
-            }
         }
         transaction.commit()
         binding.drawerLayout.closeDrawer(GravityCompat.START)
