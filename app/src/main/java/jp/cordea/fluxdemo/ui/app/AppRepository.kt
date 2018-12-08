@@ -1,0 +1,23 @@
+package jp.cordea.fluxdemo.ui.app
+
+import io.reactivex.Maybe
+import jp.cordea.fluxdemo.api.response.Application
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class AppRepository @Inject constructor(
+    private val dataSource: AppDataSource,
+    private val localDataSource: AppLocalDataSource
+) {
+    fun fetchApp(forceFetch: Boolean): Maybe<Collection<Application>> =
+        if (forceFetch) {
+            dataSource.fetchApp()
+        } else {
+            localDataSource.fetchApp()
+                .switchIfEmpty(
+                    dataSource.fetchApp()
+                        .doOnSuccess { localDataSource.cacheApp(it) }
+                )
+        }
+}
