@@ -1,6 +1,7 @@
 package jp.cordea.fluxdemo.ui.app
 
 import io.reactivex.Maybe
+import io.reactivex.schedulers.Schedulers
 import jp.cordea.fluxdemo.api.response.Application
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,5 +20,5 @@ class AppRepository @Inject constructor(
                     dataSource.fetchApp()
                         .doOnSuccess { localDataSource.cacheApp(it) }
                 )
-        }
+        }.subscribeOn(Schedulers.io())
 }

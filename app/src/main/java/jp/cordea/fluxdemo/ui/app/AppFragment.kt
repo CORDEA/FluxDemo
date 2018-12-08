@@ -10,9 +10,14 @@ import androidx.fragment.app.Fragment
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import dagger.android.support.AndroidSupportInjection
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
 import jp.cordea.fluxdemo.databinding.FragmentAppBinding
+import jp.cordea.fluxdemo.event.app.AppActionCreator
+import jp.cordea.fluxdemo.event.app.AppStore
 import javax.inject.Inject
-import javax.inject.Provider
 
 class AppFragment : Fragment() {
     companion object {
@@ -20,8 +25,12 @@ class AppFragment : Fragment() {
     }
 
     @Inject
-    lateinit var item: Provider<AppItem>
+    lateinit var store: AppStore
 
+    @Inject
+    lateinit var creator: AppActionCreator
+
+    private val compositeDisposable = CompositeDisposable()
     private val adapter by lazy { GroupAdapter<ViewHolder>() }
 
     override fun onAttach(context: Context?) {
@@ -37,5 +46,19 @@ class AppFragment : Fragment() {
         val binding = FragmentAppBinding.inflate(inflater, container, false)
         binding.recyclerView.adapter = adapter
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        store.onReady()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { }
+            .addTo(compositeDisposable)
+        store.onError()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { }
+            .addTo(compositeDisposable)
+
+        creator.init()
     }
 }
