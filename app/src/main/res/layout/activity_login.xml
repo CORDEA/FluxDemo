@@ -8,9 +8,12 @@
         android:layout_height="match_parent"
         tools:context=".ui.login.LoginActivity">
 
-        <include layout="@layout/content_login" />
+        <include
+            android:id="@+id/content"
+            layout="@layout/content_login" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
