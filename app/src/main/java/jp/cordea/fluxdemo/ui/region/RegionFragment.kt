@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.jakewharton.rxbinding3.swiperefreshlayout.refreshes
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import dagger.android.support.AndroidSupportInjection
@@ -36,6 +37,8 @@ class RegionFragment : Fragment() {
     @Inject
     lateinit var navigator: RegionNavigator
 
+    private lateinit var binding: FragmentRegionBinding
+
     private val compositeDisposable = CompositeDisposable()
     private val adapter by lazy { GroupAdapter<ViewHolder>() }
 
@@ -49,13 +52,18 @@ class RegionFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentRegionBinding.inflate(inflater, container, false)
+        binding = FragmentRegionBinding.inflate(inflater, container, false)
         binding.recyclerView.adapter = adapter
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.swipeRefresh
+            .refreshes()
+            .subscribeBy { creator.refresh() }
+            .addTo(compositeDisposable)
+
         store.onReady()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy {
@@ -68,7 +76,7 @@ class RegionFragment : Fragment() {
             .addTo(compositeDisposable)
         store.onClickedItem()
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy { navigator.navigateToDetail(it)}
+            .subscribeBy { navigator.navigateToDetail(it) }
             .addTo(compositeDisposable)
 
         creator.init()

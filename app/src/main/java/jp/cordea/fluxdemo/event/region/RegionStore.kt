@@ -23,6 +23,7 @@ class RegionStore @Inject constructor(
                     .map<RegionResult> { RegionResult.Success(it) }
                     .switchIfEmpty(Single.just(RegionResult.Failure))
             }
+            .share()
 
     fun onReady() = fetch.ofType<RegionResult.Success>().map { it.regions }
     fun onError() = fetch.ofType<RegionResult.Failure>().map { Unit }
