@@ -11,16 +11,17 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import jp.cordea.fluxdemo.R
+import jp.cordea.fluxdemo.api.response.Region
 import jp.cordea.fluxdemo.databinding.ActivityRegionDetailBinding
 import javax.inject.Inject
 
 class RegionDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
     companion object {
-        private const val POSITION_KEY = "position"
+        private const val REGION_KEY = "region"
 
-        fun createIntent(context: Context, position: Int): Intent =
+        fun createIntent(context: Context, region: Region): Intent =
             Intent(context, RegionDetailActivity::class.java).apply {
-                putExtra(POSITION_KEY, position)
+                putExtra(REGION_KEY, region)
             }
     }
 
@@ -39,7 +40,7 @@ class RegionDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
         )
         setSupportActionBar(binding.toolbar)
 
-        val position = intent.getIntExtra(POSITION_KEY, 0)
+        val region = intent.getParcelableExtra<Region>(REGION_KEY)
         binding.content.viewPager.also {
             it.adapter = adapter
             it.pageMargin = resources.getDimensionPixelSize(

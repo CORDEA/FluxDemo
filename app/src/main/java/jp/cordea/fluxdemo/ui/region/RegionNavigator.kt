@@ -1,6 +1,7 @@
 package jp.cordea.fluxdemo.ui.region
 
 import androidx.fragment.app.Fragment
+import jp.cordea.fluxdemo.api.response.Region
 import jp.cordea.fluxdemo.di.FragmentScope
 import jp.cordea.fluxdemo.ui.regiondetail.RegionDetailActivity
 import javax.inject.Inject
@@ -9,10 +10,10 @@ import javax.inject.Inject
 class RegionNavigator @Inject constructor(
     private val fragment: Fragment
 ) {
-    fun navigateToDetail(position: Int) {
+    fun navigateToDetail(region: Region) {
         val context = fragment.context ?: return
         fragment.startActivity(
-            RegionDetailActivity.createIntent(context, position)
+            RegionDetailActivity.createIntent(context, region)
         )
     }
 }
