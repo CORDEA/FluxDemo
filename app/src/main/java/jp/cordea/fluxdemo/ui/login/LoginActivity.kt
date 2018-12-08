@@ -13,6 +13,5 @@ class LoginActivity : AppCompatActivity() {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil.setContentView<ActivityLoginBinding>(this, R.layout.activity_login)
-        setSupportActionBar(toolbar)
     }
 }
