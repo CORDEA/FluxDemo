@@ -10,9 +10,14 @@ import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
 import jp.cordea.fluxdemo.R
-import jp.cordea.fluxdemo.api.response.Region
 import jp.cordea.fluxdemo.databinding.ActivityRegionDetailBinding
+import jp.cordea.fluxdemo.event.regiondetail.RegionDetailActionCreator
+import jp.cordea.fluxdemo.event.regiondetail.RegionDetailStore
 import javax.inject.Inject
 
 class RegionDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
@@ -31,6 +36,14 @@ class RegionDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var supportFragmentInjector: DispatchingAndroidInjector<Fragment>
 
+    @Inject
+    lateinit var store: RegionDetailStore
+
+    @Inject
+    lateinit var creator: RegionDetailActionCreator
+
+    private val compositeDisposable = CompositeDisposable()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
@@ -47,6 +60,20 @@ class RegionDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
                 R.dimen.activity_region_detail_view_pager_margin
             )
         }
+
+        store.onReady()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy {
+                adapter.items = it.toList()
+                binding.content.viewPager.currentItem = position
+            }
+            .addTo(compositeDisposable)
+        store.onError()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { }
+            .addTo(compositeDisposable)
+
+        creator.init()
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = supportFragmentInjector
