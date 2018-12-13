@@ -14,8 +14,6 @@ class RegionLocalDataSource @Inject constructor(
         this.regions = regions
     }
 
-    fun getRegion(id: Int) = regions!!.first { it.id == id }
-
     override fun fetchRegion(): Maybe<Collection<Region>> =
         if (regions == null) Maybe.empty() else Maybe.just(regions)
 }

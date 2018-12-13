@@ -27,6 +27,5 @@ class RegionStore @Inject constructor(
 
     fun onReady() = fetch.ofType<RegionResult.Success>().map { it.regions }
     fun onError() = fetch.ofType<RegionResult.Failure>().map { Unit }
-    fun onClickedItem() = source.reader.ofType<RegionAction.ClickedItem>()
-        .map { repository.getRegion(it.id) }
+    fun onClickedItem() = source.reader.ofType<RegionAction.ClickedItem>().map { it.position }
 }

@@ -10,10 +10,10 @@ import javax.inject.Inject
 class RegionNavigator @Inject constructor(
     private val fragment: Fragment
 ) {
-    fun navigateToDetail(region: Region) {
+    fun navigateToDetail(position: Int) {
         val context = fragment.context ?: return
         fragment.startActivity(
-            RegionDetailActivity.createIntent(context, region)
+            RegionDetailActivity.createIntent(context, position)
         )
     }
 }

@@ -18,6 +18,6 @@ class RegionItem private constructor(
 
     override fun bind(viewBinding: ListItemRegionBinding, position: Int) {
         viewBinding.vm = viewModel
-        viewBinding.root.setOnClickListener { creator.clickedItem(viewModel.id) }
+        viewBinding.root.setOnClickListener { creator.clickedItem(position) }
     }
 }

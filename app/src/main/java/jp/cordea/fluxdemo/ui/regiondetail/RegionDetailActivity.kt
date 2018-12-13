@@ -17,11 +17,11 @@ import javax.inject.Inject
 
 class RegionDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
     companion object {
-        private const val REGION_KEY = "region"
+        private const val POSITION_KEY = "position"
 
-        fun createIntent(context: Context, region: Region): Intent =
+        fun createIntent(context: Context, position: Int): Intent =
             Intent(context, RegionDetailActivity::class.java).apply {
-                putExtra(REGION_KEY, region)
+                putExtra(POSITION_KEY, position)
             }
     }
 
@@ -40,7 +40,7 @@ class RegionDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
         )
         setSupportActionBar(binding.toolbar)
 
-        val region = intent.getParcelableExtra<Region>(REGION_KEY)
+        val position = intent.getIntExtra(POSITION_KEY, 0)
         binding.content.viewPager.also {
             it.adapter = adapter
             it.pageMargin = resources.getDimensionPixelSize(
